@@ -68,22 +68,21 @@ class DocUA:
     def write_to_file(self):
         workbook = xlsxwriter.Workbook('doctors.xlsx')
         worksheet = workbook.add_worksheet()
-
+        current_cell = 0
         for doctor_info in range(len(self.parsed_doctors)):
+            current_cell = 0
             for group in range(len(self.parsed_doctors[doctor_info])):
+                print(self.parsed_doctors[doctor_info][group])
                 for cell in range(len(self.parsed_doctors[doctor_info][group])):
                     print(str(self.parsed_doctors[doctor_info][group][cell]))
-                    worksheet.write(doctor_info+1, cell, str(self.parsed_doctors[doctor_info][group][cell]))
+                    worksheet.write(doctor_info+1, current_cell, str(self.parsed_doctors[doctor_info][group][cell]))
+                    current_cell += 1
                 print("\n\n")
-                break
-
         workbook.close()
 
     def parse(self):
         try:
             while True:
-                if len(self.parsed_doctors) == 10:
-                    print(10 / 0)
                 response = requests.post("https://api.doc.ua/", data=json.dumps(self.data_), headers=self.headers_)
                 response = json.loads(response.text)
                 self.data_["param"]["offset"] += 10
